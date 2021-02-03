@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<script type="application/javascript">
+/* El objeto XMLHttpRequest
+a. Identidad
+    - responseText: Guarda el contenido de la respuesta. Default = ""
+    - responseXML: si la respuesta incluia un XML nos dan el árbol DOM del documento XML
+    - status: código de respuesta HTTP
+    - readyState : estado del objeto
+b. Funcionalidad
+    - open(metodo, url, asincrono)
+    - send(xxx)
+    - onreadystatechange
+*/
+
+
+///////////////////////////
+////PETICIONES SINCRONAS//
+//////////////////////////
+
+function enviarPeticionSincrona(){
+  // Para enviar una peticion ajax primero necesitamos un objeto XMLHttpRequest
+    let xhr = new XMLHttpRequest()
+
+    /* open sirve para inicializar el objeto XMLHttpRequest. Recibe 3 parámetros
+    - Método HTTP
+    - Url
+    - Sincrono / Async. false/true. Por defecto es true.
+  */
+    xhr.open("GET","https://reqres.in/api/users",false)
+    // Cuando es sincrona el hilo de ejecucion se queda detenido en la llamada a "send" hasta que se recibe la respuesta
+    console.log("Antes:"+ xhr.responseText)
+        // No se refresca lo que ve el usuario hasta que se termine de ejecutar todo el codigo JS
+        document.getElementById("mensaje").innerHTML = "Espere por favor"
+    xhr.send(null)
+    console.log("Despues:"+ xhr.responseText)
+    document.getElementById("mensaje").innerHTML = ""
+
+    // En responseTest tenemos el contenido del body de la respuesta
+    let json = xhr.responseText
+    // 1XX - Informativos
+    // 2XX - Todo fue bien
+    // 3XX - Vámonos
+    // 4XX - te has equivocado tu
+    // 5XX - nos hemos equivocado nosotros
+    let status = xhr.status
+    let respuesta = JSON.parse(json)
+    /*{
+        page: 1,
+        per_page: 6,
+        total: 12,
+        total_pages: 2
+        data: [ usr1, usr2, usr3, usr4, usr5, usr6 ]
+    }*/
+    console.log(respuesta)
+    console.log(respuesta.data)
+    rellenarTabla(respuesta.data)
+}
+
+/////////////////////////////
+/// PETICIONES ASINCRONAS ///
+////////////////////////////
+
+function enviarPeticionAsincrona() {
+    let xhr = new XMLHttpRequest
+    // xhr.status
+    // ----------
+    /*
+    0 - Unsent
+    1 - Open
+    2 - Headers_received
+    3 - Loading
+    4 - DONE - SOLO NOS INTERESA ESTE, BASICAMENTE.
+    */
+    xhr.open("GET", "https://reqres.in/api/users?delay=2")
+
+    // Métodos de retrollamada o CALLBACKS
+    xhr.onreadystatechange = function() {
+        console.log("Status: " + this.readyState);
+        // Puedo usar THIS porque es un CLOSURE
+        if (this.readyState == 4) {
+            if (this.status != 200) {
+                console.log("errorrrrr!!")
+                return
+            }
+            /* let json = xhr.responseText
+            let objeto = JSON.parse(json)
+            let usuarios = objeto
+            rellenarTabla(usuarios) */
+            // RESUME
+            rellenarTabla(JSON.parse(this.responseText).data)
+        }
+    }
+
+    xhr.send()
+    // Como la peticion es ASYNC no tenemos la respuesta en la siguiente linea
+    console.log("Despues: " + xhr.responseText)
+    console.log(xhr)
+}
+
+////////////////////////
+/// ON LOAD ON ERROR ///
+////////////////////////
+
+function enviarPeticionMillenial() {
+    let xhr = new XMLHttpRequest()
+    xhr.open("GET", "https://reqres.in/api/users?delay=2")
+    /* Onload se invoca cuando:
+    - readyState = 4
+    - status     = 2XX */
+    xhr.onload = function() {
+        rellenarTabla(JSON.parse(xhr.responseText).data)
+    }
+    /* Onerror se invoca cuando:
+    - readyState = 4
+    - status     = 4XX / 5XX */
+    xhr.onerror = function() {
+        console.log("ERRORRR")
+    }
+    xhr.send()
+}
+
+// Las funciones que procesan las respuesta reciben ya los daatos convertidos
+function rellenarTabla(usuarios){
+    let html = ""
+    for (let usuario of usuarios) {
+        html += `
+            <tr>
+                <td>${usuario.first_name}</td>
+                <td>${usuario.last_name}</td>
+                <td>${usuario.email}</td>
+                <td>
+                    <img src="${usuario.avatar}">
+                </td>
+            </tr>`
+    }
+    document.getElementById("tablaUsuarios").innerHTML = html
+}
+
+window.onload = function(){
+    btnListarUsuariosSincrono.onclick = enviarPeticionSincrona
+    btnListarUsuariosAsincrono.onclick = enviarPeticionAsincrona
+    btnListarUsuariosMillenial.onclick = enviarPeticionMillenial
+    //btnListarUsuariosFuncionGenerica.onclick = enviarPeticionGenerica
+}
+
+</script>
+
+
+<body>
+
+    <h1>12_AJAX Vero</h1>
+    <hr/>
+    <p align="center">
+        <button id="btnListarUsuariosSincrono">Listar Síncrono</button>
+        <button id="btnListarUsuariosAsincrono">Listar Asíncrono</button>
+        <button id="btnListarUsuariosMillenial">Listar Millenial</button>
+        <button id="btnListarUsuariosFuncionGenerica">Listar Funcion Genérica</button>
+    </p>
+
+    <input type="text"/>
+
+    <div id="mensaje"></div>
+
+    <h1 align="center" id="mensaje"></h1>
+
+    <table align="center" border="1">
+        <tr>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Correo E</th>
+            <th>Afoto</th>
+        </tr>
+        <tbody id="tablaUsuarios"></tbody>
+    </table>
+
+</body>
+</html>
+
+
+
