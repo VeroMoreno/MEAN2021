@@ -1,0 +1,26 @@
+Una ruta puede identificar
+- una carpeta: Todos los recursos contenidos en ella
+- un recurso concreto
+- un subconjunto de los recursos contenidos en una carpeta
+
+### Métodos HTTP
+GET    Solicita al servidor que entregue los recursos indetificados por la ruta. No tiene body. Es idempotente (no altera el estado del servidor, si se repite no pasa nada)
+POST   Solicita al servidor que AÑADA un recurso en una carpeta. El recurso irá en el body de la petición.
+PUT    Solicita al servidor que SUSTITUYA el recurso identificado por la ruta por el que va adjunto en el body
+PATCH  Solicita al servidor que MODIFIQUE el recurso identificado por la ruta con los datos contenidos en el body
+DELETE Solicita al servidor que elimine el recurso o recursos identificados por la ruta. No tiene body
+
+### Otros Métodos
+HEAD
+OPTIONS
+
+/******
+* GET *
+*******/
+
+- Petición
+GET /movidas/pagina3.html
+
+- Respuesta
+200 OK
+Content-type: text/html

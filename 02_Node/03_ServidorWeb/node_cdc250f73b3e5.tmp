@@ -3,16 +3,9 @@ const fs   = require("fs")
 
 // Variables Globales
 let statusCodes = {
-    400: "Petición incorrecta",
-    404: "El recurso solicitado no existe",
+    400: "El recurso solicitado no existe",
+    404: "Método HTTP no soportado",
     405: "Metodo HTTP no admitido"
-}
-
-let contentTypes = {
-    html : "text/html",
-    css  : "text/css",
-    js   : "application/javascript",
-    ico  : "image/x-icon"
 }
 
 // definimos el servidor HTTP y lo arrancamos
@@ -48,18 +41,16 @@ function procesarPeticion(request, response){
 function leerFichero(ruta, response) {
     url = "./recursos" + ruta
     console.log("Buscando el recurso: " + ruta)
-    let extension = url.split(".").pop()
 
     fs.readFile(url, (err, contenidoBuffer) => {
         if (err) {
-            //Para simplificar supondremos que hay un error es porque el fichero no existe
             // response.statusCode = 404
             // response.end("404")
             devolverError(404, response)
             return
         }
         let contenido = contenidoBuffer.toString()
-        response.setHeader("content-type", contentTypes[extension])
+        // nos falta el Content-type
         response.end(contenido)
     })
 }
@@ -78,6 +69,6 @@ function devolverError(statusCode, response) {
             <h2 align="center">${statusCode}, ${message}</h2>
         </body>
     </html>`
-    response.setHeader("content-type", "text/html")
+    // falta el Content-type
     response.end(html)
 }
