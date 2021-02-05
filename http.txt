@@ -24,3 +24,7 @@ GET /movidas/pagina3.html
 - Respuesta
 200 OK
 Content-type: text/html
+
+
+GET /recurso.html
+Accept

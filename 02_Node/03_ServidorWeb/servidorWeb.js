@@ -1,6 +1,9 @@
 const http = require("http")
 const fs   = require("fs")
 
+// Este modulo viene con Node.js
+const zlib   = require("zlib")
+
 // Variables Globales
 let statusCodes = {
     400: "Petición incorrecta",
