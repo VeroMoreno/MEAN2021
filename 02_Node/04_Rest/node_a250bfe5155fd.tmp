@@ -1,0 +1,52 @@
+const http = require("http")
+
+http.createServer(processRequest)
+.listen(3000, function() {
+    console.log("Esperando peticiones en el puerto 3000")
+})
+
+// En esta funcion haremos un triaje de la peticion recibida.
+// ESTA FUNCION SOLO HACE UNA COSA, QUIEN HACE EL REQUEST.
+function processRequest(request, response) {
+  let method = request.method.toUpperCase();
+  let url    = request.url
+  // && - Si la primera condicion no se cumple, no entra en la segunda
+  if (method == "GET" && url == "/films" ) {
+    listFilm(request, response)
+  } else if (method == "GET" && url=="/films/ALGO") {
+    findFilm(request, response)
+  } else if (method == "POST" && url=="/films") {
+    insertFilm(request, response)
+  }  else if (method == "PUT" && url=="/films/algo") {
+    modifyFilm(request, response)
+  } else if (method == "DELETE" && url=="/films/algo") {
+    deleteFilm(request, response)
+  } else {
+    // 404
+  }
+}
+
+function listFilm() {
+  // aqui hace falta un criterio de busqueda
+  console.log("Listing films")
+}
+
+function findFilm() {
+  // aqui hace falta el ID de la peli
+  console.log("Find films")
+}
+
+function insertFilm() {
+  // aqui hace falta la peli
+  console.log("Insert Film")
+}
+
+function modifyFilm() {
+  // Aqui hace falta el ID de la pelicula
+  console.log("Modify Film")
+}
+
+function deleteFilm() {
+  // Aqui hace falta el ID de la pelicula
+  console.log("Delete Film")
+}

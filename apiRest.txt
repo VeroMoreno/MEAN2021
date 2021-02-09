@@ -265,6 +265,13 @@ PUT 	/personas/{id}  {json}  modificar la persona
 DELETE  /personas/{id}  -	    borrar una persona
 
 
+///////////////////////////////
+// RELACIONES ENTRE RECURSOS //
+///////////////////////////////
+Relaciones con Cardinalidad:
+Cliente - factura
+pelicula - actor
+
 /////////////////////////////////////////////////
 // FILTRADO DE RESULTADOS CON LOS QUERY PARAMS //
 /////////////////////////////////////////////////
