@@ -13,6 +13,6 @@ Focused on Fullstack with Angular.js
     - WebServer (03_)
         - Protocolo HTTP (http.txt)
         - API REST (04)
-            - REST
-        - MongoDB (05)
+            - REST (+ bussines logic)
+        - MongoDB (05) & Promesas
 
