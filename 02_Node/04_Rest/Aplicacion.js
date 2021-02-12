@@ -1,7 +1,6 @@
 // API REST
 
 const http = require("http")
-// const restUtil = require("./restUtil") // cacacacacacacacCACAXCACACACA
 const filmBussines = require("./negocioPeliculas.js")
 const mongoDBUtil = require("./mongoDBUtil")
 const restUtil = require("./restUtil")
@@ -38,11 +37,11 @@ function processRequest(request, response) {
       listFilm(request, response)
   } else if( method=="GET" && url.match("^/films/[0-9a-fA-F]{24}$") ) {
       findFilm(request, response)
-  } else if( method="POST" && url=="/films"){
+  } else if( method=="POST" && url=="/films"){
       insertFilm(request, response)
-  } else if( method="PUT" && url.match("^/films/[0-9a-fA-F]{24}$") ){
+  } else if( method=="PUT" && url.match("^/films/[0-9a-fA-F]{24}$") ){
       modifyFilm(request, response)
-  } else if( method="DELETE" && url.match("^/films/[0-9a-fA-F]{24}$") ){
+  } else if( method=="DELETE" && url.match("^/films/[0-9a-fA-F]{24}$") ){
       deleteFilm(request, response)
   } else {
       //404
@@ -113,6 +112,7 @@ function findFilm(request, response) {
       response.end(JSON.stringify(film))
     })
     .catch(function(err){
+      console.log(err)
       restUtil.devolverError(response, 500, "Error al buscar la película")
     })
 }
@@ -121,6 +121,20 @@ function findFilm(request, response) {
 //CT: app/json
 //-------------------------------
 //{ pelicula }
+//
+// 201 Created
+// CT: app/json
+//-------------------------------
+//{ "_id" : "XXX" }
+//O también:
+//{ pelicula }
+//
+//400 Bad request
+//CT: app/json
+//-------------------------------
+//{ codigo:400, mensaje:"Datos invalidos"}
+//
+//500...
 function insertFilm(request, response) {
   console.log("insertar film, logica de negocio")
   // aqui hace falta la peli, que viene en el body (en este caso)
@@ -128,8 +142,22 @@ function insertFilm(request, response) {
   // con request.on("data", callback)" ordenamos su lectura
   // request.on es una funcion ASINCRONA
   request.on("data", function(bodyContent) {
+    console.log("entra en request.on");
       let film = JSON.parse(bodyContent)
       filmBussines.insertFilm(film)
+      .then(function(result){
+        response.end("okokokok")
+        response.statusCode = 201
+        response.setHeader("Content-Type", "application/json")
+          // si queremos responder con solo el ID
+          //response.end(JSON.stringify({ _id: result.isertedId }))
+          // Si queremos responder con toda la película
+        response.end(JSON.stringify(result.ops[0]))
+      })
+      .catch(function(error){
+        console.log(error)
+        restUtil.devolverError(response, 500, "Error al buscar la película")
+      })
   })
 }
 
@@ -139,9 +167,26 @@ function insertFilm(request, response) {
 //{ pelicula }
 function modifyFilm(request, response) {
   console.log("Modify Film")
+  let id = request.url.split("/").pop()
   request.on("data", function(bodyContent) {
+    console.log("entrará aqui en el request.on????")
       let film = JSON.parse(bodyContent)
-      filmBussines.modifyFilm(film)
+      film._id = id
+
+      filmBussines
+      .modifyFilm(film)
+      .then(function(result){
+        if(result.ok == 0){
+          restUtil.devolverError(response,404,"No existe la película")
+          return
+        }
+        // response.end(JSON.stringify(result.ops[0]))
+        response.end("okAlModify")
+      })
+      .catch(function(error){
+        console.log(error)
+        restUtil.devolverError(response, 500, "Error al buscar la película")
+      })
   })
 }
 
@@ -150,4 +195,11 @@ function deleteFilm(request, response) {
   console.log("Delete Film")
   let id = request.url.split("/").pop()
   filmBussines.deleteFilm(id)
+    .then(function(result){
+      //if 404
+      response.end("OK")
+  })
+  .catch(function(err){
+      restUtil.devolverError(response, 500, "Error al borrar la película")
+  })
 }

@@ -24,8 +24,9 @@ const mongoDB = require("mongoDB")
 - a la coleccion le pedimos que busque, inserte, modifique...
 */
 
-let url = "mongodb://localhost:27017"
-// let url = "direccion que te da atlas" // de momento seguiremos con localhost
+// const url = "mongodb://localhost:27017"
+// MongoDB Atlas
+const url = "mongodb+srv://root:root@sandbox.tvib4.mongodb.net/?retryWrites=true&w=majority";
 
 // La funcion connect es ASINCRONA
 // nos dan un objeto que representa al servidor de bases de datos
