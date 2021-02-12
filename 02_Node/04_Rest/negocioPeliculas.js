@@ -7,6 +7,11 @@ const mongoDBUtil = require("./mongoDBUtil")
 
 exports.listFilm = function() {
   let collectionFilms = mongoDBUtil.schemaFilm.collection("films")
+  // find es asincrona
+  let cursor = collectionFilms.find()
+  // Cuando empecemos a recorrer el cursos entonces si que sera una funcion asincrona
+  // toArray recorre el cursor y crea un array con todos los objetos
+  return cursor.toArray()
 }
 
 let colectionFilms = null
@@ -30,23 +35,37 @@ exports.modifyFilm = function(film) {
   return mongoDBUtil
   .schemaFilm
   .collection("films")
-  // updateOne es una funcion asincrona.
-  .updateOne({ _id : new ObjectId(film._id) },
+  //.updateOne( { _id : new ObjectId(pelicula._id) },
+  //findOneAndUpdate incluye en el objeto 'commandResult' el documento que había antes en la colección
+  //Si queremos que devuelva el objeto tal cual ha quedado hay que añadir un parámetro extra a la consulta
+  .findOneAndUpdate({ _id : new ObjectId(film._id) },
             {
+              /*
+              Le asignamos estas props al documento
+              si el documento ya las tiene, se cambiará el valor
+              si el documento no las tiene se las añade
+              */
               $set : {
-                titulo    : film.title,
+                title     : film.title,
                 director  : film.director,
                 gender    : film.gender,
                 year      : film.year,
                 snopsis   : film.sinopsis
               }
-              // segundo parámetro
+            }
+            ,
+            {
+                returnOriginal : false,
+                //Con la opcion upsert a true si el criterio de búsqueda no ha dado
+                //resultado se insertará un nuevo documento con los valores disponibles
+                //Es decir, convertimos la consulta en un 'modificar o insertar'
+                //upsert : true
             })
 }
 
 exports.deleteFilm = function(idFilm) {
   return mongoDBUtil
-  .esquemaPeliculas
+  .schemaFilm
   .collection("films")
   .deleteOne( { _id : new ObjectId(idFilm) } )
 }
