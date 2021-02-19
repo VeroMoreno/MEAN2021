@@ -4,6 +4,7 @@ const http = require("http")
 const filmBussines = require("./negocioPeliculas.js")
 const mongoDBUtil = require("./mongoDBUtil")
 const restUtil = require("./restUtil")
+const servidorWeb = require("./servidorWeb")
 
 // La función conectar recibe como parametro un callback que se invocará cuando la conexión se haya establecido
 // (en el archivo mongoDBUtil al exports.conectar se le pasa un callback)
@@ -44,9 +45,7 @@ function processRequest(request, response) {
   } else if( method=="DELETE" && url.match("^/films/[0-9a-fA-F]{24}$") ){
       deleteFilm(request, response)
   } else {
-      //404
-      console.log("???")
-      response.end("???")
+      servidorWeb.devolverContenidoEstatico(request, response)
   }
 }
 
