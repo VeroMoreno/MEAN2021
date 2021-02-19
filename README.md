@@ -11,8 +11,15 @@ Focused on Fullstack with Angular.js
     - createServer
     - fs
     - WebServer (03_)
-        - Protocolo HTTP (http.txt)
+        - Protocol HTTP (http.txt)
         - API REST (04)
             - REST (+ bussines logic)
         - MongoDB (05) & Promesas
+    - Express (06)
+        - How it works
+    - Express + Rest (07)
+        - Aplication.js - Conectar, app.listen, app.use(router)
+        - Util - mongoDBUtil.js (connect to database), restUtil.js (error messages)
+        - Rest - http request get, post put, delete + functions
+        - Bussines - obtain data from database (independant)
 
