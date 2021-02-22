@@ -1,56 +1,87 @@
-//
-//La lógica de negocio debe ser perfectamente ignorante 
-//de que estamos tratando con una API REST
-//
-//Jamás envieremos aqui el request o el reponse
-//
+/* LO QUE HABIA ANTES ERAN LAS PROMESAS QUE DEVOLVIA EXPRESS / NODE (negocioPeliculas.js de 04_rest)
+Lo que vamos a ver ahora son nuestras propias promesas personalizadas (resolve, reject)
+Las promesas personalizadas las necesitamos para que el en 'then' solo haya casos de exito
+    .then(function(peliculas){
+
+    })
+    .catch(function(err){
+
+    })
+*/
 
 const ObjectId = require("mongodb").ObjectId
 const mongoDBUtil = require("../util/mongoDBUtil")
 
 exports.listarPeliculas = function(){
-    let coleccionPeliculas = mongoDBUtil.esquemaPeliculas.collection("peliculas")
-    //find es una función SINCRONA. Devuelve un cursor
-    //coleccionPeliculas.find( {} )
-    let cursor = coleccionPeliculas.find()
-    //Cuando empecemos a recorrer el cursor entonces si que sera una función asincrona
-    //toArray recorre el cursor y crea un array con todos los objetos
-    return cursor.toArray()
+    // Cuando creamos una promesa debemos proporcionarle una funcion dentro de la cual estara el codigo que se va a ejecutar. 
+    // Esa funcion recibe por parámetros otras dos :)
+    return new Promise(function(resolve, reject) {
+        let coleccionPeliculas = mongoDBUtil.esquemaPeliculas.collection("peliculas")
+        let cursor = coleccionPeliculas.find()
+        return cursor
+            .toArray()
+            .then(function(peliculas){
+                resolve(peliculas)
+            })
+            .catch(function(err){
+                console.log(err)
+                reject({ codigo: 500 , mensaje: "Error al ejecutar la consulta"})
+            })
+    })
 }
 
 exports.buscarPelicula = function(idPelicula){
-    let coleccionPeliculas = mongoDBUtil.esquemaPeliculas.collection("peliculas")
-    //Cuidado que _id tiene como valor ObjectId
-    //return coleccionPeliculas.findOne( { _id : idPelicula })
-    return coleccionPeliculas.findOne( { _id : new ObjectId(idPelicula) })
+    return new Promise(function(resolve, reject) {
+        let coleccionPeliculas = mongoDBUtil.esquemaPeliculas.collection("peliculas")
+        coleccionPeliculas
+            .findOne( { _id : new ObjectId(idPelicula) })
+            .then(function(pelicula){
+                if  (!pelicula) {
+                    reject({ codigo: 404, mensaje: "No existe una pelicula con el id " + idPelicula })
+                    return
+                }
+                resolve(pelicula)
+            })
+            .catch(function(err){
+                console.log(err)
+                reject({ codigo: 500 , mensaje: "Error al ejecutar la consulta"})
+            })
+    })
 }
 
 exports.insertarPelicula = function(pelicula){
-    //insert
-    console.log("insertarPelicula (LN):",pelicula)
+    return new Promise(function(resolve, reject) {
+        console.log("insertar pelicula", pelicula)
+        // VALIDAR...
 
-    //Validar que la película es correcta
+        // QUITARLE EL ID A LA PELICULA para que no puedan decidir su valor desde fuera de la lógica de negocio.
+        // Si no lo quitamos desde fuera del servidor se podria decidir el valor de los id.
+        delete pelicula._id
 
-    return mongoDBUtil
+        mongoDBUtil
         .esquemaPeliculas
-        .collection("peliculas") 
-        .insertOne( pelicula )  
+        .collection("peliculas")
+        .insertOne( pelicula )
+        .then(function(pelicula){
+            // hemos cambiado el .ops[0] de restpeliculas aqui! OLE
+            resolve(pelicula.ops[0])
+        })
+        .catch(function(err){
+            console.log(err)
+            reject({ codigo: 500 , mensaje: "Error en la base de datos"})
+        })
+    })
 }
 
 exports.modificarPelicula = function(pelicula){
     //Validar la película
-
-    return mongoDBUtil
+    return new Promise(function(resolve, reject) {
+        mongoDBUtil
         .esquemaPeliculas
         .collection("peliculas")
-        //.updateOne( { _id : new ObjectId(pelicula._id) },
-        //findOneAndUpdate incluye en el objeto 'commandResult' el documento que había antes en la colección
-        //Si queremos que devuelva el objeto tal cual ha quedado hay que añadir un parámetro extra a la consulta
-        .findOneAndUpdate( { _id : new ObjectId(pelicula._id) },
+        .findOneAndUpdate( 
+                    { _id : new ObjectId(pelicula._id) },
                     {
-                        //Le asignamos estas propiedades al documento
-                        //Si el documento ya las tiene, se cambará el valor (si es distinto)
-                        //Si el documento no las tiene se las añade returnOriginal : false
                         $set : {
                             titulo   : pelicula.titulo,
                             director : pelicula.director,
@@ -58,22 +89,41 @@ exports.modificarPelicula = function(pelicula){
                             year     : pelicula.year,
                             sinopsis : pelicula.sinopsis,
                         }
-                        //Con $unset le eliminamos propiedades:
-                        //$unset : { movida : 1 }
-                    }
-                    ,
+                    },
                     {
                         returnOriginal : false,
-                        //Con la opcion upsert a true si el criterio de búsqueda no ha dado
-                        //resultado se insertará un nuevo documento con los valores disponibles
-                        //Es decir, convertimos la consulta en un 'modificar o insertar'
-                        //upsert : true
                     })
+                    .then(function(pelicula){
+                        console.log(pelicula);
+                        if  (!pelicula.value) {
+                            reject({ codigo: 404, mensaje: "No existe una pelicula con el id " + pelicula._id })
+                            return
+                        }
+                        resolve(pelicula.value)
+                    })
+                    .catch(function(err){
+                        console.log(err)
+                        reject({ codigo: 500 , mensaje: "Error en la base de datos"})
+                    })
+    })
 }
 
 exports.borrarPelicula = function(idPelicula){
-    return mongoDBUtil
+    return new Promise(function(resolve, reject) {
+        mongoDBUtil
         .esquemaPeliculas
         .collection("peliculas")
         .deleteOne( { _id : new ObjectId(idPelicula) } )
+        .then(function(pelicula){
+            if(pelicula.deletedCount == 0) {
+                reject({ codigo: 404, mensaje: "no existe una pelicula con ese id para borrar"})
+                return
+            }
+            resolve(pelicula)
+        })
+        .catch(function(err){
+            console.log(err)
+            reject({ codigo: 500 , mensaje: "Error en la base de datos"})
+        })
+    })
 }
