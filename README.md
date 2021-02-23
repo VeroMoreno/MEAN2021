@@ -23,3 +23,4 @@ Focused on Fullstack with Angular.js
         - Rest - http request get, post put, delete + functions
         - Bussines - obtain data from database (independant)
 
+    - Typescript (03)
