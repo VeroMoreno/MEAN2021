@@ -15,7 +15,7 @@ Focused on Fullstack with Angular.js
         - API REST (04)
             - REST (+ bussines logic)
         - MongoDB (05) & Promesas
-    - Express (06)
+    * ![Express](https://img.shields.io/badge/-Express-%23f89d71?logo=javascript&logoColor=white) (06)
         - How it works
     - Express + Rest (07)
         - Aplication.js - Conectar, app.listen, app.use(router)
@@ -24,7 +24,7 @@ Focused on Fullstack with Angular.js
         - Bussines - obtain data from database (independant)
 
     - Typescript (03)
-    - ✨ Angular (04)
+* ![Angular](https://img.shields.io/badge/-Angular-%23f89d71?logo=javascript&logoColor=white) (04)
         - Componentes
             - [{ngModel}] - FormsModule module
                 - Banana in box [{}] - Bidirectional mode
