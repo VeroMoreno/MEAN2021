@@ -25,10 +25,10 @@ Focused on Fullstack with Angular.js
 
     - Typescript (03)
 * ![Angular](https://img.shields.io/badge/-Angular-%23f89d71?logo=javascript&logoColor=white) (04)
-        - Componentes
-            - [{ngModel}] - FormsModule module
-                - Banana in box [{}] - Bidirectional mode
-        - Navegación (RouterOutlet)
-            - RouterModule
-            - Component injection
-        - Servicios
+    - Componentes
+        - [{ngModel}] - FormsModule module
+            - Banana in box [{}] - Bidirectional mode
+    - Navegación (RouterOutlet)
+        - RouterModule
+        - Component injection
+    - Servicios
