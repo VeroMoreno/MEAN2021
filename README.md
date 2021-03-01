@@ -24,3 +24,11 @@ Focused on Fullstack with Angular.js
         - Bussines - obtain data from database (independant)
 
     - Typescript (03)
+    - ✨ Angular (04)
+        - Componentes
+            - [{ngModel}] - FormsModule module
+                - Banana in box [{}] - Bidirectional mode
+        - Navegación (RouterOutlet)
+            - RouterModule
+            - Component injection
+        - Servicios
