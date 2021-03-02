@@ -49,3 +49,4 @@ libro1.titulo = "el corazon de las tinieblas"
 libro1.autor = "joseph conrad"  cacacacaca*/
 var libro1 = new Libro("1.", "El corazon de hannah", "Joseph Conrad");
 console.log(libro1.titulo + ", " + libro1.autor);
+

@@ -1,0 +1,93 @@
+<h1>Welcome to Angular</h1>
+
+<!--Plantillas-->
+<h3>Plantillas:</h3>
+<p>En una plantilla colocamos el contenido estático directamente con HTML</p>
+
+<!--Expresiones-->
+<h3>Expresiones:</h3>
+<p>Las usamos cuando queremos añadir el valor de una variable directamente en un nodo de texto</p>
+<p>{{  100 + 200 }}</p> <!--300-->
+<p>{{ "Verito"+" Moreno"}}</p>
+<p>{{ 500 > 250 }}</p> <!--true-->
+
+<!--
+Una expresion que no incluya variables no tiene sentido
+Las variables utilizadas en las expresiones normalmente estarán declaradas en el componente aunque tambien se podrán declarar en la propia plantilla
+-->
+<p style="color:rgb(0, 128, 115)">{{ mensaje }}</p>
+<p style="color:rgb(102, 96, 159)">{{ numero1 + numero2 }}</p>
+
+<h3>Bidirectional Binding</h3>
+<!-- Eventos:
+(nombre_evento)="llamada_a_la_función()" -->
+
+<!-- Que significa?
+  [(ngModel)] - value
+  () = de la plantilla al componente
+  [] del componente a la plantilla
+  ambos son bidireccionales
+-->
+<div>
+  <button (click)="insertarDisco()">Insertar</button>
+  <button (click)="vaciarFormulario()">Vaciar</button>
+</div>
+<table>
+  <tr>
+    <td>Título</td>
+    <td>
+      <input type="text" [(ngModel)]="disco.titulo"/>
+  </tr>
+  <tr>
+    <td>Grupo</td>
+    <td>
+      <input type="text" [(ngModel)]="disco.grupo"/>
+    </td>
+  </tr>
+  <tr>
+    <td>Año</td>
+    <td>
+      <input type="text" [(ngModel)]="disco.year"/>
+    </td>
+  </tr>
+</table>
+
+<table style="border:1px solid gray">
+  <tr>
+    <th>Título</th>
+    <th>Grupo</th>
+    <th>Año</th>
+  </tr>
+  <!--
+    *ngFor repite una etiqueta tantas veces elementos haya en un array.
+    El array será una propiedad del componente
+    // let d of discos -> es un for off !!!!
+  -->
+  <tr *ngFor="let disco of discos">
+    <td>{{disco.titulo}}</td>
+    <td>{{disco.grupo}}</td>
+    <td>{{disco.year}}</td>
+  </tr>
+
+  <tr *ngIf="discos.length == 0">
+    <td colspan="3">
+      No hay discos
+    </td>
+  </tr>
+  <br/>
+  
+  <table class="table table-hover table-striped">    
+      <thead>
+          <tr>
+              <th>Título</th>
+              <th>Grupo</th>
+              <th>Género</th>
+              <th>Año</th>
+          </tr>
+      </thead>
+      <tbody id="tablaPeliculas"></tbody>
+  </table>  
+</table>
+
+<!--Falta lo de los botones-->
+<p [ngClass]="estilo">Hola!</p>
