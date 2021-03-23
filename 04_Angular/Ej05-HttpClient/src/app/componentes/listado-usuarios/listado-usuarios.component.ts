@@ -10,6 +10,7 @@ export class ListadoUsuariosComponent implements OnInit {
 
   // Esta mal utilizar el objeto HTTP Client en un componente
   public usuarios:any[] = []
+  public imagen:string = "#"
 
   constructor(private httpClient:HttpClient) { }
 
@@ -17,29 +18,27 @@ export class ListadoUsuariosComponent implements OnInit {
   }
 
   public listarUsuarios():void {
-    //this.httpClient.get("URL", headers?):Observable
-    //                delete
-    //
-    //this.httpCliente.post("USR", body?, headers?):Observable
-    this.usuarios = [
-      {
-        first_name : "Asdrubal"
-      },
-      {
-        first_name : "Ringo"
-      }
-    ]
+    /* this.httpClient.get("URL", headers?):Observable
+                      delete
+
+    this.httpCliente.post("USR", body?, headers?):Observable */
 
     let obs:Observable<any> = this.httpClient.get("https://reqres.in/api/users")
     obs.subscribe(
-      function(resultado) {
-        console.log(resultado.data)
-        this.usuarios = resultado.data
-      },
-      function(error) {
-        console.log(error)
-      }
+      resultado => this.usuarios = resultado.data,
+      error => console.log(error)
     )
   }
 
+    //Experimento de [src]
+  //------------------------------------
+  public rutaImagen:string = ""
+
+  public imagen1():void{
+    this.rutaImagen = "https://reqres.in/img/faces/6-image.jpg"
+  }
+
+  public imagen2():void{
+    this.rutaImagen = "https://reqres.in/img/faces/2-image.jpg"
+  }
 }

@@ -33,3 +33,4 @@ Focused on Fullstack with Angular.js
         - Component injection
     - Servicios - obj.service.ts (Ej4)
     - HttpClientModule (Ej5)
+    - Reactive Forms (Ej6)
