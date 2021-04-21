@@ -10,16 +10,19 @@ export class ServicioSubject {
 
     public constructor(){
         //this.subject = new Subject()
-        this.subject = new BehaviorSubject(new Persona("-"))
+        // Si quieres BehaviorSubject siempre tienes que proporcionar un valor
+        this.subject = new BehaviorSubject(new Persona("Veri"))
     }
 
+    // S U B J E C T - Nos promete un stream de personas
     public getPersona():Subject<Persona>{
         return this.subject;
     }
 
     public setNombre(nombre:string):void{
         let persona = new Persona(nombre)
-        this.subject.next(persona) 
+        // El que esté atento, allá va una persona.
+        this.subject.next(persona)
     }
 
 }

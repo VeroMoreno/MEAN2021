@@ -6,7 +6,7 @@ import { Persona } from "../entidades/persona";
 export class ServicioMemoria {
 
     private persona:Persona = new Persona()
-    
+
     public getPersona():Persona{
         return this.persona
     }

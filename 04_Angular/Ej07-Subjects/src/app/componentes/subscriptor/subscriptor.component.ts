@@ -8,21 +8,17 @@ import { ServicioSubject } from 'src/app/servicios/servicioSubject';
   templateUrl: './subscriptor.component.html'
 })
 
-
-
-
-
-
-
-
-
 export class SubscriptorComponent implements OnInit {
 
   public personaMemoria:Persona
-  public personaSubject:Persona = new Persona("aaa") //Este no llega a salir porque nada mas subscribirnos nos entregan una persona(BehaviorSubject)
+
+  /* Este no llega a salir porque nada mas subscribirnos nos entregan
+  una persona(BehaviorSubject), si tirara de Subject, SI pintaría "aaa" */
+  // opcion numero 1 = new Persona("aaa")
+  public personaSubject:Persona = new Persona("aaa")
 
   constructor(private servicioMemoria:ServicioMemoria,
-              private servicioSubject:ServicioSubject) { 
+              private servicioSubject:ServicioSubject) {
     this.personaMemoria = servicioMemoria.getPersona()
 
     //No nos dan una persona. Nos dan un subject que entregará un stream de personas
@@ -30,7 +26,7 @@ export class SubscriptorComponent implements OnInit {
       .getPersona()
       .subscribe(
         persona => {
-          console.log("Recibida una nueva persona")
+          console.log("Recibida una nueva persona" + JSON.stringify(persona))
           this.personaSubject = persona
         }
       )

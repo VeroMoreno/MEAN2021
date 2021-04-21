@@ -9,10 +9,13 @@ import { ServicioSubject } from 'src/app/servicios/servicioSubject';
 })
 export class FormularioComponent implements OnInit {
 
-  public nombre:string 
+  public nombre:string
+
+  public persona:Persona
 
   constructor(private servicioMemoria:ServicioMemoria,
-              private servicioSubject:ServicioSubject) { 
+              private servicioSubject:ServicioSubject) {
+    // this.persona = servicioMemoria.getPersona()
   }
 
   ngOnInit(): void {
